@@ -1,0 +1,47 @@
+{
+  "name": "chat-app-api",
+  "version": "1.0.0",
+  "description": "chat app api",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node ./src/server.js",
+    "lint": "eslint ./src",
+    "migrate": "node-pg-migrate",
+    "generate-key": "node ./src/RSA_encryption/generateKeys.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Vikraam27/chat-application-api.git"
+  },
+  "keywords": [
+    "api"
+  ],
+  "author": "vikram",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Vikraam27/chat-application-api/issues"
+  },
+  "homepage": "https://github.com/Vikraam27/chat-application-api#readme",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.2",
+    "@hapi/jwt": "^2.1.1",
+    "bcrypt": "^5.0.1",
+    "dotenv": "^16.0.0",
+    "joi": "^17.6.0",
+    "nanoid": "^3.3.3",
+    "node-pg-migrate": "^6.0.0",
+    "node-rsa": "^1.1.1",
+    "nodemailer": "^6.7.3",
+    "pg": "^8.7.3",
+    "redis": "^4.0.6"
+  },
+  "engines": {
+    "node": "12.22.12"
+  },
+  "devDependencies": {
+    "eslint": "^8.14.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "nodemon": "^2.0.15"
+  }
+}
