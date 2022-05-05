@@ -2,3 +2,4 @@ node_modules
 Keys
 .env
 mychat-api-key.pem
+package-lock.json
