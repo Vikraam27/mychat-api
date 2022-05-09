@@ -15,7 +15,7 @@ class UserHandler {
     await this._validator.validateUserRegisterModel(request.payload);
 
     const {
-      username, fullname, email, profileUrl, gender, status, password,
+      username, fullname, email, gender, status, password,
     } = request.payload;
     await this._controllers.verifyEmail(email);
     await this._controllers.verifyUsername(username);
@@ -25,10 +25,10 @@ class UserHandler {
       email, username, password, createdAt,
     });
     await this._controllers.addUserProfile({
-      userId, username, fullname, email, profileUrl, gender, status, createdAt,
+      userId, username, fullname, email, gender, status, createdAt,
     });
     const hash = encrypt({
-      userId,
+      id: userId,
       username,
       email,
     });
@@ -68,10 +68,10 @@ class UserHandler {
     await this._validator.validateVerifyOtp(request.payload);
 
     const { otp, token } = request.payload;
-    const { userId } = JSON.parse(decrypt(token));
+    const { id } = JSON.parse(decrypt(token));
 
     await this._controllers.verifyOtp(otp, token);
-    await this._controllers.verifiedUserEmail(userId);
+    await this._controllers.verifiedUserEmail(id);
 
     return {
       status: 'success',

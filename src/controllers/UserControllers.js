@@ -31,11 +31,13 @@ class UserControllers {
   }
 
   async addUserProfile({
-    userId, username, fullname, email, profileUrl, gender, status, createdAt,
+    userId, username, fullname, email, gender, status, createdAt,
   }) {
     const query = {
-      text: 'INSERT INTO user_profile VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING user_id',
-      values: [userId, username, fullname, email, profileUrl, gender, status, createdAt, createdAt],
+      text: `INSERT INTO user_profile
+      (user_id, username, fullname, user_email, gender, status, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING user_id`,
+      values: [userId, username, fullname, email, gender, status, createdAt, createdAt],
     };
 
     const result = await this._pool.query(query);
@@ -136,6 +138,19 @@ class UserControllers {
 
     if (result.rowCount > 0) {
       throw new InvariantError('email already taken');
+    }
+  }
+
+  async updateUserProfilePicture(userId, profileUrl) {
+    const query = {
+      text: 'UPDATE user_profile SET profile_url = $1 WHERE user_id = $2 RETURNING profile_url',
+      values: [profileUrl, userId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount > 0) {
+      throw new InvariantError('fail to update profile picture');
     }
   }
 }

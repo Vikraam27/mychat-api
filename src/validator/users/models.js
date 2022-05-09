@@ -5,7 +5,6 @@ const RegisterUserPayload = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
   fullname: Joi.string().required(),
-  profileUrl: Joi.string().allow('', null),
   gender: Joi.string().required(),
   status: Joi.string().required(),
 });

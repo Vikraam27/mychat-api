@@ -8,6 +8,8 @@ class AuthenticationsHandler {
     this._validator = validator;
 
     this.postAuthenticationHandler = this.postAuthenticationHandler.bind(this);
+    this.putAuthenticationHandler = this.putAuthenticationHandler.bind(this);
+    this.deleteAuthenticationHandler = this.deleteAuthenticationHandler.bind(this);
   }
 
   async postAuthenticationHandler(request, h) {
@@ -46,6 +48,7 @@ class AuthenticationsHandler {
       username,
       email: userMail,
     });
+    await this._authenticationsControllers.addRefreshToken(refreshToken);
 
     const response = h.response({
       status: 'success',
@@ -57,6 +60,40 @@ class AuthenticationsHandler {
     });
     response.code(201);
     return response;
+  }
+
+  async putAuthenticationHandler(request) {
+    this._validator.validatePutAuthenticationsPayload(request.payload);
+
+    const { refreshToken } = request.payload;
+
+    await this._authenticationsControllers.verifyRefreshToken(refreshToken);
+
+    const { id, username, email } = this._tokenManager.verifyRefreshToken(refreshToken);
+    const accessToken = this._tokenManager.generateAccessToken({ id, username, email });
+
+    return {
+      status: 'success',
+      statusCode: 200,
+      message: 'successfully update the token',
+      data: {
+        accessToken,
+      },
+    };
+  }
+
+  async deleteAuthenticationHandler(request) {
+    this._validator.validateDeleteAuthenticationsPayload(request.payload);
+
+    const { refreshToken } = request.payload;
+    await this._authenticationsControllers.verifyRefreshToken(refreshToken);
+    await this._authenticationsControllers.deleteRefreshToken(refreshToken);
+
+    return {
+      status: 'success',
+      statusCode: 200,
+      message: 'successfully deleted refresh token',
+    };
   }
 }
 

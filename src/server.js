@@ -15,6 +15,11 @@ const AuthenticationsControllers = require('./controllers/AuthenticationsControl
 const TokenManager = require('./tokenize/TokenManager');
 const AuthenticationsValidator = require('./validator/authentications');
 
+// uploads
+const uploads = require('./api/uploads');
+const StorageControllers = require('./controllers/storage/StorageControllers');
+const UploadsValidator = require('./validator/uploads');
+
 // exception
 const ClientError = require('./exceptions/ClientError');
 
@@ -22,6 +27,7 @@ const init = async () => {
   const userControllers = new UserControllers();
   const mailSender = new MailSender();
   const authenticationsControllers = new AuthenticationsControllers();
+  const storageControllers = new StorageControllers();
 
   const server = Hapi.server({
     host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
@@ -41,7 +47,7 @@ const init = async () => {
   ]);
 
   // jwt proctected routes
-  server.auth.strategy('chat_app', 'jwt', {
+  server.auth.strategy('mychat_jwt', 'jwt', {
     keys: process.env.ACCESS_TOKEN_KEY,
     verify: {
       aud: false,
@@ -76,6 +82,14 @@ const init = async () => {
         userControllers,
         tokenManager: TokenManager,
         validator: AuthenticationsValidator,
+      },
+    },
+    {
+      plugin: uploads,
+      options: {
+        controllers: storageControllers,
+        validator: UploadsValidator,
+        userControllers,
       },
     },
   ]);
