@@ -9,6 +9,8 @@ class UserHandler {
     this.registerUserHandler = this.registerUserHandler.bind(this);
     this.requestOtpHandler = this.requestOtpHandler.bind(this);
     this.verifyOtpHanlder = this.verifyOtpHanlder.bind(this);
+    this.getProfileHandler = this.getProfileHandler.bind(this);
+    this.UpdateProfileHandler = this.UpdateProfileHandler.bind(this);
   }
 
   async registerUserHandler(request, h) {
@@ -76,6 +78,38 @@ class UserHandler {
     return {
       status: 'success',
       message: 'successfully verified email',
+    };
+  }
+
+  async getProfileHandler(request) {
+    const { id } = request.auth.credentials;
+    const data = await this._controllers.getUserProfile(id);
+
+    return {
+      status: 'success',
+      message: 'successfully get user information',
+      data: {
+        userId: data.user_id,
+        username: data.username,
+        fullname: data.fullname,
+        email: data.user_email,
+        profileUrl: data.profile_url,
+        gender: data.gender,
+        status: data.status,
+      },
+    };
+  }
+
+  async UpdateProfileHandler(request) {
+    const { id } = request.auth.credentials;
+    await this._validator.validateUpdateProfileModels(request.payload);
+
+    const { fullname, gender, status } = request.payload;
+    await this._controllers.updateUserProfile(id, fullname, gender, status);
+
+    return {
+      status: 'success',
+      message: 'successfully update user information',
     };
   }
 }

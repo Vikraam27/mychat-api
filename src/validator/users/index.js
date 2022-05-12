@@ -1,5 +1,5 @@
 const {
-  LoginUserPayload, RegisterUserPayload, RequestOtpPayload, VerifyOtpPayload,
+  LoginUserPayload, RegisterUserPayload, RequestOtpPayload, VerifyOtpPayload, UpdateProfilePayload,
 } = require('./models');
 const InvariantError = require('../../exceptions/InvariantError');
 
@@ -27,6 +27,13 @@ const UserValidator = {
   },
   validateVerifyOtp: (payload) => {
     const validationResult = VerifyOtpPayload.validate(payload);
+
+    if (validationResult.error) {
+      throw new InvariantError(validationResult.error.message);
+    }
+  },
+  validateUpdateProfileModels: (payload) => {
+    const validationResult = UpdateProfilePayload.validate(payload);
 
     if (validationResult.error) {
       throw new InvariantError(validationResult.error.message);

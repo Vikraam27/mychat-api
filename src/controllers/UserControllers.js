@@ -4,6 +4,7 @@ const { hash, compare } = require('bcrypt');
 
 const InvariantError = require('../exceptions/InvariantError');
 const AuthenticationError = require('../exceptions/AuthenticationError');
+const NotFoundError = require('../exceptions/NotFoundError');
 
 class UserControllers {
   constructor() {
@@ -152,6 +153,30 @@ class UserControllers {
     if (!result.rowCount > 0) {
       throw new InvariantError('fail to update profile picture');
     }
+  }
+
+  async getUserProfile(userId) {
+    const query = {
+      text: 'SELECT * FROM user_profile WHERE user_id = $1',
+      values: [userId],
+    };
+
+    const result = await this._pool.query(query);
+
+    if (!result.rowCount) {
+      throw new NotFoundError('user not found');
+    }
+
+    return result.rows[0];
+  }
+
+  async updateUserProfile(userId, fullname, gender, status) {
+    const query = {
+      text: 'UPDATE user_profile SET fullname = $1, gender = $2, status = $3 WHERE user_id = $4',
+      values: [fullname, gender, status, userId],
+    };
+
+    await this._pool.query(query);
   }
 }
 
