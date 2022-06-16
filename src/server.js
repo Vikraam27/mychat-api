@@ -2,7 +2,7 @@ require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
 const Jwt = require('@hapi/jwt');
-
+const innert = require('@hapi/inert');
 // user
 const users = require('./api/users');
 const UserControllers = require('./controllers/UserControllers');
@@ -43,6 +43,9 @@ const init = async () => {
   await server.register([
     {
       plugin: Jwt,
+    },
+    {
+      plugin: innert,
     },
   ]);
 
