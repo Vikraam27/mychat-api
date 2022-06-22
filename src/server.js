@@ -20,6 +20,11 @@ const uploads = require('./api/uploads');
 const StorageControllers = require('./controllers/storage/StorageControllers');
 const UploadsValidator = require('./validator/uploads');
 
+// chat room
+const chatRoom = require('./api/chatRoom');
+const ChatRoomControllers = require('./controllers/ChatRoomControllers');
+const ChatRoomValidator = require('./validator/chatRoom');
+
 // exception
 const ClientError = require('./exceptions/ClientError');
 
@@ -28,6 +33,7 @@ const init = async () => {
   const mailSender = new MailSender();
   const authenticationsControllers = new AuthenticationsControllers();
   const storageControllers = new StorageControllers();
+  const chatRoomControllers = new ChatRoomControllers();
 
   const server = Hapi.server({
     host: process.env.NODE_ENV !== 'production' ? 'localhost' : '0.0.0.0',
@@ -92,6 +98,14 @@ const init = async () => {
       options: {
         controllers: storageControllers,
         validator: UploadsValidator,
+        userControllers,
+      },
+    },
+    {
+      plugin: chatRoom,
+      options: {
+        controllers: chatRoomControllers,
+        validator: ChatRoomValidator,
         userControllers,
       },
     },

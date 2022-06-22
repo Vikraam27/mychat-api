@@ -178,6 +178,17 @@ class UserControllers {
 
     await this._pool.query(query);
   }
+
+  async getProfileUrl(username) {
+    const query = {
+      text: 'SELECT profile_url FROM user_profile WHERE username = $1',
+      values: [username],
+    };
+
+    const { rows } = await this._pool.query(query);
+
+    return rows[0];
+  }
 }
 
 module.exports = UserControllers;
