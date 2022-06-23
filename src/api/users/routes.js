@@ -30,6 +30,14 @@ const routes = (handler) => [
       auth: 'mychat_jwt',
     },
   },
+  {
+    method: 'GET',
+    path: '/search-user',
+    handler: handler.searchUserByUsernameHanlder,
+    options: {
+      auth: 'mychat_jwt',
+    },
+  },
 ];
 
 module.exports = routes;

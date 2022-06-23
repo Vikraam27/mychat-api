@@ -48,3 +48,14 @@ CREATE TABLE "authentications" (
   "refresh_token" TEXT NOT NULL,
   "created_at" TEXT NOT NULL
 );
+
+CREATE TABLE "chat_room" (
+  "id" VARCHAR(50) PRIMARY KEY,
+  "creator" VARCHAR(50) NOT NULL REFERENCES users(username) ON DELETE CASCADE,
+  "created_at" timestamp DEFAULT current_timestamp NOT NULL
+);
+
+CREATE TABLE "room_participant" (
+  "room_id" VARCHAR(50) NOT NULL REFERENCES chat_room(id) ON DELETE CASCADE,
+  "participant_username" VARCHAR(50) NOT NULL REFERENCES users(username) ON DELETE CASCADE
+);

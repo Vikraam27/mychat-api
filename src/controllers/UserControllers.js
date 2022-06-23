@@ -189,6 +189,20 @@ class UserControllers {
 
     return rows[0];
   }
+
+  async searchUserByUsername(q) {
+    const query = {
+      text: `SELECT users.username, user_profile.profile_url, user_profile.profile_url, user_profile.status
+      FROM users JOIN user_profile ON users.username = user_profile.username
+      WHERE LOWER(users.username) LIKE $1 AND users.is_email_verified = true LIMIT 10;
+      `,
+      values: [`%${q}%`],
+    };
+
+    const { rows } = await this._pool.query(query);
+
+    return rows;
+  }
 }
 
 module.exports = UserControllers;

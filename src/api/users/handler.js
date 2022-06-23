@@ -11,6 +11,7 @@ class UserHandler {
     this.verifyOtpHanlder = this.verifyOtpHanlder.bind(this);
     this.getProfileHandler = this.getProfileHandler.bind(this);
     this.UpdateProfileHandler = this.UpdateProfileHandler.bind(this);
+    this.searchUserByUsernameHanlder = this.searchUserByUsernameHanlder.bind(this);
   }
 
   async registerUserHandler(request, h) {
@@ -110,6 +111,16 @@ class UserHandler {
     return {
       status: 'success',
       message: 'successfully update user information',
+    };
+  }
+
+  async searchUserByUsernameHanlder(request) {
+    const { q } = request.query;
+    const data = await this._controllers.searchUserByUsername(q);
+
+    return {
+      status: 'success',
+      data,
     };
   }
 }
