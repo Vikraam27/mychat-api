@@ -23,6 +23,11 @@ const routes = (handler) => [
       auth: 'mychat_jwt',
     },
   },
+  {
+    method: 'POST',
+    path: '/room/{roomId}/message',
+    handler: handler.postMessageHandler,
+  },
 ];
 
 module.exports = routes;

@@ -5,10 +5,10 @@ module.exports = {
   name: 'chat-room',
   version: '1.0.0',
   register: async (server, {
-    controllers, validator, userControllers,
+    controllers, validator, userControllers, messageControllers, rsaEncrypt,
   }) => {
     const chatRoomHandler = new ChatRoomHandler({
-      controllers, validator, userControllers,
+      controllers, validator, userControllers, messageControllers, rsaEncrypt,
     });
     server.route(routes(chatRoomHandler));
   },

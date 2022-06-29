@@ -1,12 +1,17 @@
 class ChatRoomHandler {
-  constructor({ controllers, validator, userControllers }) {
+  constructor({
+    controllers, validator, userControllers, messageControllers, rsaEncrypt,
+  }) {
     this._controllers = controllers;
     this._validator = validator;
     this._userControllers = userControllers;
+    this._messageControllers = messageControllers;
+    this._rsaEncrypt = rsaEncrypt;
 
     this.createChatRoomHandler = this.createChatRoomHandler.bind(this);
     this.getAllRoomChatHandler = this.getAllRoomChatHandler.bind(this);
     this.getRoomByIdHandler = this.getRoomByIdHandler.bind(this);
+    this.postMessageHandler = this.postMessageHandler.bind(this);
   }
 
   async createChatRoomHandler(request, h) {
@@ -49,6 +54,8 @@ class ChatRoomHandler {
       const {
         profile_url: participantProfileUrl,
       } = await this._userControllers.getProfileUrl(participant);
+      const lastMessage = await this._messageControllers.getLastMessage(id);
+      const decryptedMsg = this._rsaEncrypt.decrypt(lastMessage[0]);
 
       return {
         id,
@@ -56,6 +63,7 @@ class ChatRoomHandler {
         creatorProfileUrl,
         participant,
         participantProfileUrl,
+        lastMessage: JSON.parse(decryptedMsg),
       };
     }));
 
@@ -79,6 +87,12 @@ class ChatRoomHandler {
     const { profile_url: participantProfileUrl } = await this._userControllers
       .getProfileUrl(participant);
 
+    const encryptedMessages = await this._messageControllers.getAllMessage(roomId);
+    const message = encryptedMessages.map((msg) => {
+      const decrypt = this._rsaEncrypt.decrypt(msg);
+      return JSON.parse(decrypt);
+    });
+
     return {
       status: 'success',
       data: {
@@ -88,8 +102,35 @@ class ChatRoomHandler {
         participant,
         participantProfileUrl,
         createdAt,
+        message,
       },
     };
+  }
+
+  async postMessageHandler(request, h) {
+    this._validator.validateMessagePayload(request.payload);
+    const { roomId } = request.params;
+    const { sender, message, messageType } = request.payload;
+    const timestamp = new Date().toISOString();
+    const value = JSON.stringify({
+      sender,
+      message,
+      messageType,
+      timestamp,
+    });
+    const encryptedMessage = this._rsaEncrypt.encrypt(value);
+
+    await this._messageControllers.postMessage(roomId, encryptedMessage);
+    return h.response({
+      status: 'success',
+      message: 'successfully send message',
+      data: {
+        sender,
+        message,
+        messageType,
+        timestamp,
+      },
+    }).code(201);
   }
 }
 
