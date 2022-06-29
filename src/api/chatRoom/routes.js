@@ -27,6 +27,9 @@ const routes = (handler) => [
     method: 'POST',
     path: '/room/{roomId}/message',
     handler: handler.postMessageHandler,
+    options: {
+      auth: 'mychat_jwt',
+    },
   },
 ];
 

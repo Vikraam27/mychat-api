@@ -5,7 +5,6 @@ const ChatRoomModels = Joi.object({
 });
 
 const MessageModels = Joi.object({
-  sender: Joi.string().required(),
   message: Joi.string().required(),
   messageType: Joi.string().required(),
 });

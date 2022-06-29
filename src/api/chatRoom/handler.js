@@ -109,11 +109,12 @@ class ChatRoomHandler {
 
   async postMessageHandler(request, h) {
     this._validator.validateMessagePayload(request.payload);
+    const { username } = request.auth.credentials;
     const { roomId } = request.params;
-    const { sender, message, messageType } = request.payload;
+    const { message, messageType } = request.payload;
     const timestamp = new Date().toISOString();
     const value = JSON.stringify({
-      sender,
+      sender: username,
       message,
       messageType,
       timestamp,
@@ -125,7 +126,7 @@ class ChatRoomHandler {
       status: 'success',
       message: 'successfully send message',
       data: {
-        sender,
+        sender: username,
         message,
         messageType,
         timestamp,
