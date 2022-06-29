@@ -55,15 +55,13 @@ class ChatRoomHandler {
         profile_url: participantProfileUrl,
       } = await this._userControllers.getProfileUrl(participant);
       const lastMessage = await this._messageControllers.getLastMessage(id);
-      const decryptedMsg = this._rsaEncrypt.decrypt(lastMessage[0]);
-
       return {
         id,
         creator,
         creatorProfileUrl,
         participant,
         participantProfileUrl,
-        lastMessage: JSON.parse(decryptedMsg),
+        lastMessage: lastMessage ? JSON.parse(this._rsaEncrypt.decrypt(lastMessage[0])) : null,
       };
     }));
 
