@@ -1,17 +1,19 @@
 class ChatRoomHandler {
   constructor({
-    controllers, validator, userControllers, messageControllers, rsaEncrypt,
+    controllers, validator, userControllers, messageControllers, rsaEncrypt, storageControllers,
   }) {
     this._controllers = controllers;
     this._validator = validator;
     this._userControllers = userControllers;
     this._messageControllers = messageControllers;
     this._rsaEncrypt = rsaEncrypt;
+    this._storageControllers = storageControllers;
 
     this.createChatRoomHandler = this.createChatRoomHandler.bind(this);
     this.getAllRoomChatHandler = this.getAllRoomChatHandler.bind(this);
     this.getRoomByIdHandler = this.getRoomByIdHandler.bind(this);
     this.postMessageHandler = this.postMessageHandler.bind(this);
+    this.postPictureMessageHanlder = this.postPictureMessageHanlder.bind(this);
   }
 
   async createChatRoomHandler(request, h) {
@@ -127,6 +129,35 @@ class ChatRoomHandler {
         sender: username,
         message,
         messageType,
+        timestamp,
+      },
+    }).code(201);
+  }
+
+  async postPictureMessageHanlder(request, h) {
+    const { data } = request.payload;
+    this._validator.validateImageMessagePayload(data.hapi.headers);
+    const { username } = request.auth.credentials;
+    const { roomId } = request.params;
+
+    const fileUrl = await this._storageControllers.uploadMessagePhoto(data);
+    const timestamp = new Date().toISOString();
+    const value = JSON.stringify({
+      sender: username,
+      message: fileUrl,
+      messageType: 'image',
+      timestamp,
+    });
+    const encryptedMessage = this._rsaEncrypt.encrypt(value);
+    await this._messageControllers.postMessage(roomId, encryptedMessage);
+
+    return h.response({
+      status: 'success',
+      message: 'successfully send message',
+      data: {
+        sender: username,
+        message: fileUrl,
+        messageType: 'image',
         timestamp,
       },
     }).code(201);

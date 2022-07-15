@@ -31,6 +31,18 @@ const routes = (handler) => [
       auth: 'mychat_jwt',
     },
   },
+  {
+    method: 'POST',
+    path: '/room/{roomId}/message/image',
+    handler: handler.postPictureMessageHanlder,
+    options: {
+      auth: 'mychat_jwt',
+      payload: {
+        allow: 'multipart/form-data',
+        multipart: true,
+        output: 'stream',
+      },
+    },
+  },
 ];
-
 module.exports = routes;

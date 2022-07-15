@@ -112,6 +112,7 @@ const init = async () => {
         userControllers,
         messageControllers,
         rsaEncrypt,
+        storageControllers,
       },
     },
   ]);

@@ -9,4 +9,8 @@ const MessageModels = Joi.object({
   messageType: Joi.string().required(),
 });
 
-module.exports = { ChatRoomModels, MessageModels };
+const ImageHeadersModels = Joi.object({
+  'content-type': Joi.string().valid('image/apng', 'image/avif', 'image/gif', 'image/jpeg', 'image/png', 'image/webp').required(),
+}).unknown();
+
+module.exports = { ChatRoomModels, MessageModels, ImageHeadersModels };
