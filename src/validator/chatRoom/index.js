@@ -1,5 +1,7 @@
 const InvariantError = require('../../exceptions/InvariantError');
-const { ChatRoomModels, MessageModels, ImageHeadersModels } = require('./models');
+const {
+  ChatRoomModels, MessageModels, ImageHeadersModels, DocumentHeadersModels,
+} = require('./models');
 
 const ChatRoomValidator = {
   validateChatRoomPayload: (payload) => {
@@ -18,6 +20,13 @@ const ChatRoomValidator = {
   },
   validateImageMessagePayload: (payload) => {
     const validationResult = ImageHeadersModels.validate(payload);
+
+    if (validationResult.error) {
+      throw new InvariantError(validationResult.error.message);
+    }
+  },
+  validateDocumentMessagePayload: (payload) => {
+    const validationResult = DocumentHeadersModels.validate(payload);
 
     if (validationResult.error) {
       throw new InvariantError(validationResult.error.message);

@@ -13,4 +13,13 @@ const ImageHeadersModels = Joi.object({
   'content-type': Joi.string().valid('image/apng', 'image/avif', 'image/gif', 'image/jpeg', 'image/png', 'image/webp').required(),
 }).unknown();
 
-module.exports = { ChatRoomModels, MessageModels, ImageHeadersModels };
+const DocumentHeadersModels = Joi.object({
+  'content-type': Joi.string().valid('application/pdf').required(),
+}).unknown();
+
+module.exports = {
+  ChatRoomModels,
+  MessageModels,
+  ImageHeadersModels,
+  DocumentHeadersModels,
+};
