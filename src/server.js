@@ -148,8 +148,8 @@ const init = async () => {
   });
 
   io.on('connection', (socket) => {
-    socket.on('joinRoom', ({ roomId }) => {
-      socket.join(roomId);
+    socket.on('joinRoom', ({ roomid }) => {
+      socket.join(roomid);
     });
 
     socket.on('chatMsg', ({
