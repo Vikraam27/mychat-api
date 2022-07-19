@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 require('dotenv').config();
 
 const Hapi = require('@hapi/hapi');
@@ -137,6 +138,31 @@ const init = async () => {
     });
     serverError.code(500);
     return response.continue || response;
+  });
+
+  const io = require('socket.io')(server.listener, {
+    cors: {
+      origin: server.info.uri,
+      methods: ['GET', 'POST'],
+    },
+  });
+
+  io.on('connection', (socket) => {
+    socket.on('joinRoom', ({ roomId }) => {
+      socket.join(roomId);
+    });
+
+    socket.on('chatMsg', ({
+      roomId, sender, message, messageType, timestamp,
+    }) => {
+      io.to(roomId).emit('msg', ({
+        sender, message, messageType, timestamp,
+      }));
+    });
+
+    socket.on('disconnect', () => {
+      console.log('disconect');
+    });
   });
 
   await server.start();
