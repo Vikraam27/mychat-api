@@ -155,9 +155,9 @@ const init = async () => {
     socket.on('chatMsg', ({
       roomId, sender, message, messageType, timestamp,
     }) => {
-      io.to(roomId).emit('msg', ({
+      socket.to(roomId).emit('msg', {
         sender, message, messageType, timestamp,
-      }));
+      });
     });
 
     socket.on('disconnect', () => {
