@@ -186,7 +186,6 @@ class UserControllers {
     };
 
     const { rows } = await this._pool.query(query);
-    console.log(rows);
 
     return rows[0];
   }
