@@ -54,9 +54,7 @@ class ChatRoomHandler {
       id, creator, participant_username: participant,
     }) => {
       const creatorProfileUrl = await this._userControllers.getProfileUrl(creator);
-      console.log('creator', creatorProfileUrl);
       const participantProfileUrl = await this._userControllers.getProfileUrl(participant);
-      console.log('participant', participantProfileUrl);
       const lastMessage = await this._messageControllers.getLastMessage(id);
       return {
         id,
