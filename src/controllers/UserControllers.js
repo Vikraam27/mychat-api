@@ -187,7 +187,7 @@ class UserControllers {
 
     const { rows } = await this._pool.query(query);
 
-    return rows[0];
+    return rows[0].profile_url;
   }
 
   async searchUserByUsername(q) {
