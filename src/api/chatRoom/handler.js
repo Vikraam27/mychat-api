@@ -81,9 +81,9 @@ class ChatRoomHandler {
       created_at: createdAt,
     } = await this._controllers.getRoomById(roomId);
 
-    const { profile_url: creatorProfileUrl } = await this._userControllers
+    const creatorProfileUrl = await this._userControllers
       .getProfileUrl(creator);
-    const { profile_url: participantProfileUrl } = await this._userControllers
+    const participantProfileUrl = await this._userControllers
       .getProfileUrl(participant);
 
     const encryptedMessages = await this._messageControllers.getAllMessage(roomId);
